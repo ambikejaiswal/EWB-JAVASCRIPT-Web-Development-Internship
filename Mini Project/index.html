@@ -1,0 +1,137 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Inventory Dashboard</title>
+</head>
+<body>
+    <h1>Product Inventory & Analytics</h1>
+    <p>Open the browser console (F12) to view the report.</p>
+
+    <script>
+        console.log("--- Initializing Inventory System ---");
+
+        // 1. Initial inventory
+        const inventory = [
+            { name: "Laptop", price: 800 },
+            { name: "Mouse", price: 25 }
+        ];
+
+        // 2. User input
+        const productName = prompt("Enter new product name:", "Monitor");
+        const priceInput = prompt("Enter product price:", "150");
+
+        const name = productName ? productName.trim() : "";
+        const price = Number(priceInput);
+
+        // 3. Validate input using if...else
+        if (!name || priceInput === null ||
+            priceInput.trim() === "" ||
+            !Number.isFinite(price) || price <= 0) {
+            console.log("Invalid product input. Please enter a name and a positive price.");
+        } else {
+            inventory.push({ name, price });
+            console.log(`[Prompt executed: User adds "${name}" at "$${price}"]`);
+
+            // 4. Regular function: determine category
+            function getCategory(price) {
+                let category;
+
+                if (price < 100) {
+                    category = "Budget";
+                } else if (price < 200) {
+                    category = "Standard";
+                } else {
+                    category = "Premium";
+                }
+
+                // Switch statement assigns category badge
+                switch (category) {
+                    case "Budget":
+                        return "Budget";
+                    case "Standard":
+                        return "Standard";
+                    case "Premium":
+                        return "Premium";
+                    default:
+                        return "Unknown";
+                }
+            }
+
+            // 5. Arrow function: calculate total value
+            const calculateTotal = (items) => {
+                let total = 0;
+
+                for (let i = 0; i < items.length; i++) {
+                    if (!Number.isFinite(items[i].price)) {
+                        continue;
+                    }
+
+                    total += items[i].price;
+                }
+
+                return total;
+            };
+
+            // 6. Search inventory using loop and break
+            let foundProduct = null;
+
+            for (let i = 0; i < inventory.length; i++) {
+                if (inventory[i].name.toLowerCase() === name.toLowerCase()) {
+                    foundProduct = inventory[i];
+                    break;
+                }
+            }
+
+            if (foundProduct) {
+                console.log("\n--- Processing Inventory Roster (forEach) ---");
+
+                inventory.forEach((product) => {
+                    console.log(
+                        `* Item: ${product.name} ($${product.price}) -> Category: ${getCategory(product.price)}`
+                    );
+                });
+
+                // 7. Financial analytics
+                console.log("\n--- Financial Analytics ---");
+
+                console.log(
+                    "Total Inventory Value: $" + calculateTotal(inventory)
+                );
+
+                const affordableItems = inventory.filter(
+                    (product) => product.price < 200
+                );
+
+                console.log(
+    "Filtered Affordable Items (Under $200):",
+    JSON.stringify(affordableItems.map(product => product.name))
+);
+
+                const report = inventory.map(
+                    (product) =>
+                        `${product.name.toUpperCase()}: $${product.price}`
+                );
+
+         console.log(
+    "Formatted Report List:",
+    JSON.stringify(report)
+);
+
+                // 8. Function scope demonstration
+                function calculateAfterDiscount(total, discount = 0) {
+                    const finalTotal = total - total * discount / 100;
+                    return finalTotal;
+                }
+
+                console.log(
+                    "Value after 10% discount: $" +
+                    calculateAfterDiscount(calculateTotal(inventory), 10)
+                );
+            }
+        }
+    </script>
+</body>
+</html>
